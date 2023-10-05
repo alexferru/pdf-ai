@@ -1,6 +1,7 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
         upload your file and start asking questions right away.
       </p>
 
-      <Link href="/dashboard" target="_blank">
+      <Link className={buttonVariants()} href="/dashboard" target="_blank">
         Get started <ArrowRight className="ml-2 h-5 w-5" />
       </Link>
     </MaxWidthWrapper>

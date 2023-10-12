@@ -4,6 +4,7 @@ import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
 import { Ghost } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
+import Link from "next/link";
 
 const Dashboard = () => {
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
@@ -18,7 +19,20 @@ const Dashboard = () => {
 
       {/* display user files */}
       {files && files.length > 0 ? (
-        <div></div>
+        <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+          {files
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+            .map((file) => (
+              <li
+                key={file.id}
+                className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg"
+              ></li>
+            ))}
+        </ul>
       ) : isLoading ? (
         <Skeleton height={100} className="my-2" count={3}></Skeleton>
       ) : (

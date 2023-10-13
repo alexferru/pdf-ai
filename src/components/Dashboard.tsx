@@ -2,13 +2,16 @@
 
 import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
-import { Ghost, Plus } from "lucide-react";
+import { Ghost, MessageSquare, Plus, Trash } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Link from "next/link";
-import { formatDistance, subDays } from "date-fns";
+import { formatDistanceStrict, subDays } from "date-fns";
+import { Button } from "./ui/button";
 
 const Dashboard = () => {
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation();
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -52,10 +55,26 @@ const Dashboard = () => {
                   <div className="flex items-center gap-2">
                     <Plus className="h-4 w-4" />
 
-                    {formatDistance(new Date(file.createdAt), new Date(), {
-                      addSuffix: true,
-                    })}
+                    {formatDistanceStrict(
+                      new Date(file.createdAt),
+                      new Date(),
+                      {
+                        addSuffix: true,
+                      }
+                    )}
                   </div>
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    mocked
+                  </div>
+                  <Button
+                    onClick={() => deleteFile({ id: file.id })}
+                    size="sm"
+                    className="w-full"
+                    variant="destructive"
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
                 </div>
               </li>
             ))}

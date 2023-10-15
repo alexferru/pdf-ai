@@ -4,9 +4,11 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import Dropzone from "react-dropzone";
-import { Cloud } from "lucide-react";
+import { Cloud, File } from "lucide-react";
 
 const UploadDropzone = () => {
+
+  
   return (
     <Dropzone
       multiple={false}
@@ -32,6 +34,17 @@ const UploadDropzone = () => {
                 </p>
                 <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
               </div>
+
+              {acceptedFiles && acceptedFiles[0] ? (
+                <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
+                  <div className="px-3 py-2 h-full grid place-items-center">
+                    <File className="h-4 w-4 text-blue-500" />
+                  </div>
+                  <div className="px-3 py-2 h-full text-sm truncate">
+                    {acceptedFiles[0].name}
+                  </div>
+                </div>
+              ) : null}
             </label>
           </div>
         </div>

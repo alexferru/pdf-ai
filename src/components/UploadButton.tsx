@@ -7,8 +7,8 @@ import Dropzone from "react-dropzone";
 import { Cloud, File } from "lucide-react";
 
 const UploadDropzone = () => {
+  const [isUploading, setIsUploading] = useState<boolean>(true);
 
-  
   return (
     <Dropzone
       multiple={false}
@@ -43,6 +43,12 @@ const UploadDropzone = () => {
                   <div className="px-3 py-2 h-full text-sm truncate">
                     {acceptedFiles[0].name}
                   </div>
+                </div>
+              ) : null}
+
+              {isUploading ? (
+                <div className="w-full mt-4 max-w-xs mx-auto">
+                  
                 </div>
               ) : null}
             </label>

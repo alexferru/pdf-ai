@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 
 const UploadDropzone = () => {
   const router = useRouter();
-  const [isUploading, setIsUploading] = useState<boolean>(true);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { toast } = useToast();
 

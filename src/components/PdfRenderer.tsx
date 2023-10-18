@@ -22,6 +22,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   const { toast } = useToast();
 
   const [numPages, setNumPages] = useState<number>();
+  const [currPage, setCurrPage] = useState<number>(1);
 
   const { width, ref } = useResizeDetector();
 
@@ -29,15 +30,35 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
     <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
-          <Button variant="ghost" aria-label="previous page">
+          <Button
+            disabled={currPage <= 1}
+            onClick={() => {
+              setCurrPage((prev) => (prev - 1 > 1 ? prev - 1 : prev));
+            }}
+            variant="ghost"
+            aria-label="previous page"
+          >
             <ChevronDown className="h-4 w-4" />
           </Button>
-          <div className="flex items-center gap-1.5"></div>
-          <Input className="w-12 h-8" />
-          <p className="text-zinc-700 text-sm space-x-1">
-            <span>/</span>
-            <span>{numPages ?? "Reading..."}</span>
-          </p>
+          <div className="flex items-center gap-1.5">
+            <Input placeholder={currPage} className="w-12 h-8" />
+            <p className="text-zinc-700 text-sm space-x-1">
+              <span>/</span>
+              <span>{numPages ?? "..."}</span>
+            </p>
+          </div>
+          <Button
+            disabled={numPages === undefined || currPage === numPages}
+            onClick={() => {
+              setCurrPage((prev) =>
+                prev + 1 > numPages! ? numPages! : prev + 1
+              );
+            }}
+            variant="ghost"
+            aria-label="next page"
+          >
+            <ChevronDown className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
@@ -60,7 +81,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             file={url}
             className="max-h-full"
           >
-            <Page width={width ? width : 1} pageNumber={1} />
+            <Page width={width ? width : 1} pageNumber={currPage} />
           </Document>
         </div>
       </div>

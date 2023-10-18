@@ -48,3 +48,5 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
 };
 
 export default PdfRenderer;
+
+

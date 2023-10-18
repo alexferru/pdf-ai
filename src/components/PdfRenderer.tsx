@@ -8,6 +8,9 @@ import { useToast } from "./ui/use-toast";
 
 import { useResizeDetector } from "react-resize-detector";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useState } from "react";
+import { set } from "date-fns";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -17,6 +20,8 @@ interface PdfRendererProps {
 
 const PdfRenderer = ({ url }: PdfRendererProps) => {
   const { toast } = useToast();
+
+  const [numPages, setNumPages] = useState<number>();
 
   const { width, ref } = useResizeDetector();
 
@@ -28,6 +33,11 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             <ChevronDown className="h-4 w-4" />
           </Button>
           <div className="flex items-center gap-1.5"></div>
+          <Input className="w-12 h-8" />
+          <p className="text-zinc-700 text-sm space-x-1">
+            <span>/</span>
+            <span>{numPages ?? "Reading..."}</span>
+          </p>
         </div>
       </div>
 
@@ -46,6 +56,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                 variant: "destructive",
               });
             }}
+            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
             file={url}
             className="max-h-full"
           >

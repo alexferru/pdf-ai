@@ -10,7 +10,6 @@ import { useResizeDetector } from "react-resize-detector";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { set } from "date-fns";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -101,6 +100,10 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
           >
             <ChevronDown className="h-4 w-4" />
           </Button>
+        </div>
+
+        <div className="space-x-2">
+          
         </div>
       </div>
 

@@ -12,6 +12,12 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { set } from "date-fns";
 
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PdfRendererProps {
@@ -24,7 +30,32 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
 
+  const CustomPageValidator = z.object({
+    page: z
+      .string()
+      .refine((num) => Number(num) > 0 && Number(num) <= numPages!),
+  });
+
+  type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<TCustomPageValidator>({
+    defaultValues: {
+      page: "1",
+    },
+    resolver: zodResolver(CustomPageValidator),
+  });
+
   const { width, ref } = useResizeDetector();
+
+  const handlePageSubmit = ({ page }: TCustomPageValidator) => {
+    setCurrPage(Number(page));
+    setValue("page", String(page));
+  };
 
   return (
     <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
@@ -41,7 +72,18 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             <ChevronDown className="h-4 w-4" />
           </Button>
           <div className="flex items-center gap-1.5">
-            <Input placeholder={currPage} className="w-12 h-8" />
+            <Input
+              {...register("page")}
+              className={cn(
+                "w-12 h-8",
+                errors.page && "focus-visible:ring-red-500"
+              )}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit(handlePageSubmit)();
+                }
+              }}
+            />
             <p className="text-zinc-700 text-sm space-x-1">
               <span>/</span>
               <span>{numPages ?? "..."}</span>

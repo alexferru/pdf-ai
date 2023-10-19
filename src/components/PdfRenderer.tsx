@@ -101,10 +101,6 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             <ChevronDown className="h-4 w-4" />
           </Button>
         </div>
-
-        <div className="space-x-2">
-          
-        </div>
       </div>
 
       <div className="flex-1 w-full max-h-100 items-center ">

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -61,9 +61,11 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
           <Button
-            disabled={currPage <= 1}
+            disabled={numPages === undefined || currPage === numPages}
             onClick={() => {
-              setCurrPage((prev) => (prev - 1 > 1 ? prev - 1 : prev));
+              setCurrPage((prev) =>
+                prev + 1 > numPages! ? numPages! : prev + 1
+              );
             }}
             variant="ghost"
             aria-label="previous page"
@@ -89,16 +91,14 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             </p>
           </div>
           <Button
-            disabled={numPages === undefined || currPage === numPages}
+            disabled={currPage <= 1}
             onClick={() => {
-              setCurrPage((prev) =>
-                prev + 1 > numPages! ? numPages! : prev + 1
-              );
+              setCurrPage((prev) => (prev - 1 > 1 ? prev - 1 : 1));
             }}
             variant="ghost"
             aria-label="next page"
           >
-            <ChevronDown className="h-4 w-4" />
+            <ChevronUp className="h-4 w-4" />
           </Button>
         </div>
       </div>

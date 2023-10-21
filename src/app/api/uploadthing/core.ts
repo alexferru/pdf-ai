@@ -43,15 +43,25 @@ export const ourFileRouter = {
 
         // vectorize and index document
 
-        const pineconeIndex = pinecone.Index("dkmnt");
+        const pineconeIndex = pinecone.Index("dkmnt1");
+
+        // Add a 'dataset' field to the data to distinguish the source
+        const combinedData = pageLevelDocs.map((document) => {
+          return {
+            ...document,
+            metadata: {
+              fileId: createdFile.id,
+            },
+            dataset: "pdf", // Use a field to indicate the source dataset (e.g., 'pdf')
+          };
+        });
 
         const embeddings = new OpenAIEmbeddings({
           openAIApiKey: process.env.OPENAI_API_KEY,
         });
 
-        await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
+        await PineconeStore.fromDocuments(combinedData, embeddings, {
           pineconeIndex,
-          namespace: createdFile.id,
         });
 
         await db.file.update({
@@ -63,6 +73,7 @@ export const ourFileRouter = {
           },
         });
       } catch (err) {
+        console.log("Err pinecore", err);
         await db.file.update({
           data: {
             uploadStatus: "FAILED",
